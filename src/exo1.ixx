@@ -1,9 +1,9 @@
 module;
-// Import rapide de la bibliothèque standard
-import std;
-
 // Nommage et exportation de ce module
 export module exo1;
+
+// Import rapide de la bibliothèque standard
+import std;
 
 // On met toutes les classes du module dans un espace de nom
 // ayant le même nom que le module pour plus de clarté et éviter

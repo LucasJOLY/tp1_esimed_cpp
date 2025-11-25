@@ -54,7 +54,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-##### Android
+##### Androidfff
 # Built application files
 *.apk
 *.ap_
@@ -140,11 +140,8 @@ lint/tmp/
 [._]*.un~
 
 ##### VisualStudioCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+
+
 *.code-workspace
 
 # Local History for Visual Studio Code
@@ -375,5 +372,4 @@ _deps
 # template files
 log.txt
 /shaders/
-.vscode
 cmake-build-debug-mingw
