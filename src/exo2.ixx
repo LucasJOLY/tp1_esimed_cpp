@@ -1,6 +1,6 @@
 module;
 // Nommage et exportation de ce module
-export module exo1;
+export module exo2;
 
 // Import rapide de la bibliothèque standard
 import std;
@@ -9,17 +9,27 @@ import std;
 // ayant le même nom que le module pour plus de clarté et éviter
 // les conflits de nommage.
 // On exporte la totalité des classe de l'espace de nom.
-export namespace exo1 {
+export namespace exo2 {
 
     // Classe Vector représentant un vecteur à trois dimensions
     class Vector {
     public:
         // Constructeur par défaut
-        Vector() = default;
+        Vector() {
+            std::cout << "Constructeur par défaut appelé\n";
+        }
 
         // Constructeur à trois arguments
         Vector(const double x, const double y, const double z)
-            : x{x}, y{y}, z{z} {}
+            : x{x}, y{y}, z{z} {
+            std::cout << "Constructeur à trois arguments appelé\n";
+        }
+
+        // Constructeur par copie
+        Vector(const Vector& other)
+            : x{other.x}, y{other.y}, z{other.z} {
+            std::cout << "Constructeur par copie appelé\n";
+        }
 
         // Accesseurs
         double GetX() const { return x; }
@@ -38,8 +48,15 @@ export namespace exo1 {
             z *= factor;
         }
 
-        // Somme : ajoute les composantes d'un autre vecteur
-        void Sum(const Vector other) {
+        // Somme 1 : passage par copie
+        void Sum1(const Vector other) {
+            x += other.x;
+            y += other.y;
+            z += other.z;
+        }
+
+        // Somme 2 : passage par référence
+        void Sum2(const Vector& other) {
             x += other.x;
             y += other.y;
             z += other.z;
@@ -62,33 +79,27 @@ export namespace exo1 {
     public:
         // Tout le code de l'exercice doit être dans ce constructeur
         Application() {
-            std::cout << "=== Démonstration de la classe Vector ===\n\n";
+            std::cout << "=== Démonstration passage par référence vs copie ===\n\n";
 
-            // Création de vecteurs avec la syntaxe moderne
-            const auto vecteur1 = Vector{12.34, 56.78, 90.12};
-            std::cout << "Vecteur 1 initial : " << vecteur1.ToString() << std::endl;
+            std::cout << "Création de v1:\n";
+            const auto v1 = Vector{12.34, 34.56, 56.78};
+            std::cout << "v1 = " << v1.ToString() << "\n\n";
 
-            auto vecteur2 = Vector{1.0, 2.0, 3.0};
-            std::cout << "Vecteur 2 initial : " << vecteur2.ToString() << std::endl;
+            std::cout << "Création de v2:\n";
+            const auto v2 = Vector{1.1, 2.2, 3.3};
+            std::cout << "v2 = " << v2.ToString() << "\n\n";
 
-            // Test de l'homothétie
-            vecteur2.Homothety(2.5);
-            std::cout << "Vecteur 2 après homothétie (×2.5) : " << vecteur2.ToString() << std::endl;
+            std::cout << "Appel de Sum1 (passage par copie):\n";
+            auto v3 = Vector{12.34, 34.56, 56.78};
+            v3.Sum1(v2);
+            std::cout << "v3 après Sum1 = " << v3.ToString() << "\n\n";
 
-            // Test de la somme
-            auto vecteur3 = Vector{10.0, 20.0, 30.0};
-            std::cout << "Vecteur 3 initial : " << vecteur3.ToString() << std::endl;
-            vecteur3.Sum(vecteur1);
-            std::cout << "Vecteur 3 après somme avec Vecteur 1 : " << vecteur3.ToString() << std::endl;
-
-            // Test des accesseurs et modificateurs
-            auto vecteur4 = Vector{};
-            vecteur4.SetX(100.0);
-            vecteur4.SetY(200.0);
-            vecteur4.SetZ(300.0);
-            std::cout << "Vecteur 4 (créé avec setters) : " << vecteur4.ToString() << std::endl;
-            std::cout << "Composante X du Vecteur 4 : " << vecteur4.GetX() << std::endl;
+            std::cout << "Appel de Sum2 (passage par référence):\n";
+            auto v4 = Vector{12.34, 34.56, 56.78};
+            v4.Sum2(v2);
+            std::cout << "v4 après Sum2 = " << v4.ToString() << "\n\n";
         }
     };
 
 }
+
