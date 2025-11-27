@@ -52,11 +52,27 @@ if [ ! -f "$PROJECT_ROOT/CMakeLists.txt" ]; then
     exit 1
 fi
 
+# Vérifier si le répertoire build est configuré correctement
+cd "$PROJECT_ROOT" || exit
+if [ ! -f "build/CMakeCache.txt" ] || [ ! -f "build/build.ninja" ]; then
+    echo "⚙️  Configuration de CMake..."
+    # Nettoyer le répertoire build s'il existe mais n'est pas configuré avec Ninja
+    if [ -d "build" ] && [ ! -f "build/build.ninja" ]; then
+        echo "🧹 Nettoyage du répertoire build..."
+        rm -rf build
+    fi
+    mkdir -p build
+    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=BOOL=TRUE -DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++ -G Ninja -S . -B build > /dev/null 2>&1
+    if [ $? -ne 0 ] || [ ! -f "build/build.ninja" ]; then
+        echo "❌ Erreur lors de la configuration CMake"
+        exit 1
+    fi
+fi
+
 # Si le fichier est dans le dossier tests/, exécuter les tests
 if [[ "$FILE_DIR" == *"tests"* ]] || [[ "$FILE_PATH" == *"tests"* ]]; then
     echo "🔍 Détection: fichier de test détecté"
     echo "📦 Compilation des tests avec CMake..."
-    cd "$PROJECT_ROOT" || exit
     cmake --build build --target tests
     if [ $? -eq 0 ]; then
         echo ""
@@ -71,7 +87,6 @@ if [[ "$FILE_DIR" == *"tests"* ]] || [[ "$FILE_PATH" == *"tests"* ]]; then
 else
     echo "🔍 Détection: programme principal détecté"
     echo "📦 Compilation avec CMake..."
-    cd "$PROJECT_ROOT" || exit
     cmake --build build --target mon_projet
     if [ $? -eq 0 ]; then
         echo ""
